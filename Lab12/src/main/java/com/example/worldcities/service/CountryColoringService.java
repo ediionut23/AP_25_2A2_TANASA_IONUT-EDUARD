@@ -9,12 +9,10 @@ import java.util.*;
 public class CountryColoringService {
 
     public Map<Country, String> assignColors(List<Country> countries, Map<Country, Set<Country>> neighbors) {
-        // Available colors
         List<String> colors = Arrays.asList("#FF0000", "#00FF00", "#0000FF", "#FFFF00");
         
         Map<Country, String> colorAssignment = new HashMap<>();
         
-        // Sort countries by degree (number of neighbors) in descending order
         List<Country> sortedCountries = new ArrayList<>(countries);
         sortedCountries.sort((c1, c2) -> {
             int degree1 = neighbors.getOrDefault(c1, Collections.emptySet()).size();
@@ -22,9 +20,7 @@ public class CountryColoringService {
             return Integer.compare(degree2, degree1);
         });
         
-        // Assign colors to countries
         for (Country country : sortedCountries) {
-            // Get colors used by neighbors
             Set<String> usedColors = new HashSet<>();
             Set<Country> countryNeighbors = neighbors.getOrDefault(country, Collections.emptySet());
             
@@ -35,7 +31,6 @@ public class CountryColoringService {
                 }
             }
             
-            // Find first available color
             String selectedColor = colors.stream()
                 .filter(color -> !usedColors.contains(color))
                 .findFirst()

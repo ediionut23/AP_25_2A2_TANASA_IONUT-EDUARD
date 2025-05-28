@@ -19,7 +19,6 @@ public class DataInitializer {
             CountryRepository countryRepository,
             CityRepository cityRepository) {
         return args -> {
-            // Create continents
             Continent europe = new Continent();
             europe.setName("Europe");
             europe = continentRepository.save(europe);
@@ -28,7 +27,6 @@ public class DataInitializer {
             asia.setName("Asia");
             asia = continentRepository.save(asia);
 
-            // Create countries
             Country romania = new Country();
             romania.setName("Romania");
             romania.setCode("RO");
@@ -41,7 +39,6 @@ public class DataInitializer {
             japan.setContinent(asia);
             japan = countryRepository.save(japan);
 
-            // Create cities
             City bucharest = new City();
             bucharest.setName("Bucharest");
             bucharest.setCountry(romania);

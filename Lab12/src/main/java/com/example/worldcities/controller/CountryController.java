@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -28,6 +29,13 @@ public class CountryController {
         return countryRepository.findAll();
     }
 
+    @PostMapping
+    @Operation(summary = "Create a new country")
+    public ResponseEntity<Country> createCountry(@RequestBody Country country) {
+        Country savedCountry = countryRepository.save(country);
+        return ResponseEntity.ok(savedCountry);
+    }
+
     @GetMapping("/colors")
     @Operation(
         summary = "Get country colors",
@@ -37,7 +45,6 @@ public class CountryController {
     public Map<String, String> getCountryColors() {
         List<Country> countries = countryRepository.findAll();
         
-        // For demo purposes, we'll create a simple neighboring countries map
         Map<Country, Set<Country>> neighbors = new HashMap<>();
         for (int i = 0; i < countries.size(); i++) {
             Set<Country> countryNeighbors = new HashSet<>();
@@ -48,7 +55,6 @@ public class CountryController {
         
         Map<Country, String> colorAssignment = countryColoringService.assignColors(countries, neighbors);
         
-        // Convert to country name -> color map for the response
         Map<String, String> response = new HashMap<>();
         colorAssignment.forEach((country, color) -> response.put(country.getName(), color));
         

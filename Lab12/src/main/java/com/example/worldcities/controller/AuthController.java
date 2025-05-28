@@ -1,10 +1,9 @@
 package com.example.worldcities.controller;
 
-import com.example.worldcities.security.JwtTokenUtil;
+import com.example.worldcities.security.JwtService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtService jwtService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -27,12 +26,12 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        UserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
         
-        if (passwordEncoder.matches(authRequest.getPassword(), userDetails.getPassword())) {
-            final String token = jwtTokenUtil.generateToken(userDetails.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token));
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            String token = jwtService.generateToken(user.getUsername());
+            return ResponseEntity.ok(new LoginResponse(token));
         }
         
         return ResponseEntity.badRequest().body("Invalid credentials");
@@ -40,12 +39,12 @@ public class AuthController {
 }
 
 @Data
-class AuthRequest {
+class LoginRequest {
     private String username;
     private String password;
 }
 
 @Data
-class AuthResponse {
+class LoginResponse {
     private final String token;
 } 
