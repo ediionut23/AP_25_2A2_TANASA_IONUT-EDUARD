@@ -1,4 +1,5 @@
 package org.example;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -26,8 +27,11 @@ public class GameClient {
                 }
 
                 out.println(input);
-                String response = in.readLine();
-                System.out.println("Server: " + response);
+                String response;
+                while ((response = in.readLine()) != null) {
+                    System.out.println("Server: " + response);
+                    if (!in.ready()) break;
+                }
             }
 
         } catch (IOException e) {

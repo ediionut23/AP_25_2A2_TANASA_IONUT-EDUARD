@@ -19,7 +19,7 @@ public class GameServer {
                 Socket clientSocket = serverSocket.accept();
                 new Thread(new ClientThread(clientSocket, this)).start();
             } catch (IOException e) {
-                System.out.println("Error accepting connection: " + e.getMessage());
+                if (running) System.out.println("Error accepting connection: " + e.getMessage());
             }
         }
     }
